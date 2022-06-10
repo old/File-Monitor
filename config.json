@@ -1,0 +1,18 @@
+{
+	"mongoConnectionURL": "",
+	"discordWebhookURL": "",
+	"pingOnUpdate": true,
+	"webhookOnError": true,
+	"useProxies": true,
+	"monitorAkamai": true,
+	"monitorDelay": 36000,
+	"monitorTheseEndpoints": ["https://www.yeezysupply.com/wrgen"],
+	"monitorTheseAkamaiEndpoints": [
+		"https://www.yeezysupply.com/",
+		"https://www.nike.com/",
+		"https://api.nike.com/",
+		"https://unite.nike.com/",
+		"https://www.dickssportinggoods.com/",
+		"https://launch.dickssportinggoods.com/"
+	]
+}

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { fullDate } from "./utils";
 import { Config } from "./config";
 const checksum = require("checksum");
@@ -88,38 +88,38 @@ export default class FileMonitor {
 		});
 	}
 
-	private static async sendErrorWebhook(config: Config) {}
+	private static async sendErrorWebhook() {}
+
+	private static async sendRequestErrorWebhook(fileData: FileData) {}
+
+	private static async requestFileData(endpoint: string) {}
+
+	private static checkIfFileUpdated(fileData: FileData) {}
 
 	// monitor loop through all the endpoints every x millaseconds
 	private static async monitor(config: Config, proxies: string[]) {
 		const { monitorTheseEndpoints, monitorAkamai, monitorTheseAkamaiEndpoints, monitorDelay } = config;
 
 		setInterval(() => {
-			try {
-				monitorTheseEndpoints.forEach(async (endpoint) => {
+			monitorTheseEndpoints.forEach(async (endpoint) => {
+				try {
 					const { data } = await axios.get(endpoint);
-
-					const fileData: FileData = {
-						site: endpoint,
-						siteURL: endpoint,
-						siteImageURL: "",
-						fileContents: data,
-						fileChecksumHash: checksum(data),
-						fileChangeTime: fullDate(),
-					};
-					FileMonitor.sendWebhook(fileData, config);
-				});
-
-				if (monitorAkamai) {
+				} catch (err: any) {
+					if (err.response) {
+						const fileData: FileData = {};
+						FileMonitor.sendRequestErrorWebhook(fileData);
+					}
 				}
-			} catch (err) {
-				FileMonitor.sendErrorWebhook(config);
-			}
+			});
 		}, monitorDelay);
 	}
 
 	public static async Start(config: Config, proxies: string[]) {
-		FileMonitor.validateConfig(config, proxies); // validates the config.json values
-		FileMonitor.monitor(config, proxies); // starts the monitor
+		try {
+			FileMonitor.validateConfig(config, proxies); // validates the config.json values
+			FileMonitor.monitor(config, proxies); // starts the monitor}
+		} catch (err) {
+			FileMonitor.sendErrorWebhook();
+		}
 	}
 }

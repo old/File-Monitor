@@ -1,6 +1,6 @@
 {
-	"mongoConnectionURL": "",
-	"discordWebhookURL": "",
+	"mongoConnectionURL": "ffsdfsd",
+	"discordWebhookURL": "fdsfds",
 	"pingOnUpdate": true,
 	"webhookOnError": true,
 	"useProxies": true,
